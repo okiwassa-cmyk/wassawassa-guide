@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>WASSA WASSA — Guest Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Sans+SC:wght@300;400;500&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sand: #e8dcc8;
+  --sand-light: #f5f0e8;
+  --earth: #8b6f47;
+  --earth-dark: #4a3728;
+  --earth-mid: #6b4f38;
+  --ocean: #3d6b7a;
+  --ocean-light: #6fa0ae;
+  --forest: #4e6b44;
+  --cream: #faf8f3;
+  --charcoal: #2c2825;
+  --warm-gray: #9a8878;
+  --coral: #b86840;
+  --gold: #c4973a;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { height:100%; overflow:hidden; }
+body { font-family:'Noto Sans JP',sans-serif; background:var(--cream); color:var(--charcoal); }
+
+/* ===== LANGUAGE SPLASH ===== */
+#splash {
+  position:fixed; inset:0; z-index:2000;
+  background: linear-gradient(160deg, #2a1f15 0%, #3d2d1e 40%, #2e3d35 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:40px; transition:opacity 0.9s ease;
+}
+#splash.hide { opacity:0; pointer-events:none; }
+.splash-logo { text-align:center; }
+.splash-logo .ww {
+  font-family:'Cormorant Garamond',serif;
+  color:var(--sand); font-size:58px; font-weight:300; letter-spacing:10px;
+  display:block;
+}
+.splash-logo .tagline {
+  font-family:'Cormorant Garamond',serif;
+  color:var(--warm-gray); font-size:15px; letter-spacing:5px;
+  font-style:italic; margin-top:6px; display:block;
+}
+.splash-divider {
+  width:60px; height:1px; background:linear-gradient(90deg,transparent,var(--sand),transparent);
+}
+.lang-prompt {
+  font-family:'Cormorant Garamond',serif;
+  color:var(--sand-light); font-size:16px; letter-spacing:3px; font-style:italic;
+}
+.lang-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; width:380px; }
+.lang-btn {
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(232,220,200,0.2);
+  color:var(--sand); padding:20px 16px;
+  border-radius:10px; cursor:pointer; text-align:center;
+  transition:all 0.25s; font-size:14px;
+}
+.lang-btn:hover { background:rgba(232,220,200,0.14); border-color:rgba(232,220,200,0.5); transform:translateY(-2px); }
+.lang-btn .flag { font-size:28px; display:block; margin-bottom:6px; }
+.lang-btn .lname { font-size:16px; font-weight:500; display:block; }
+.lang-btn .lsub { font-size:11px; opacity:0.6; margin-top:2px; display:block; }
+
+/* ===== MAIN APP ===== */
+#app { height:100vh; display:flex; flex-direction:column; }
+
+.header {
+  background:var(--earth-dark);
+  padding:12px 20px;
+  display:flex; align-items:center; justify-content:space-between;
+  flex-shrink:0;
+  box-shadow:0 2px 16px rgba(0,0,0,0.3);
+}
+.header-logo {
+  font-family:'Cormorant Garamond',serif;
+  color:var(--sand); font-size:24px; font-weight:300; letter-spacing:5px;
+}
+.header-right { display:flex; gap:10px; align-items:center; }
+.lang-chip {
+  background:rgba(232,220,200,0.12);
+  border:1px solid rgba(232,220,200,0.25);
+  color:var(--sand); padding:6px 14px; border-radius:20px;
+  cursor:pointer; font-size:13px; transition:all 0.2s;
+}
+.lang-chip:hover { background:rgba(232,220,200,0.22); }
+.cur-lang-flag { font-size:18px; }
+
+/* Tab bar */
+.tab-bar {
+  display:flex; background:#3d2d1e;
+  border-bottom:2px solid var(--earth-mid);
+  flex-shrink:0; overflow-x:auto; scrollbar-width:none;
+}
+.tab-bar::-webkit-scrollbar { display:none; }
+.tab-item {
+  flex:1; min-width:72px; padding:12px 6px;
+  text-align:center; cursor:pointer;
+  font-size:10px; color:rgba(232,220,200,0.5);
+  border-bottom:3px solid transparent;
+  transition:all 0.2s; white-space:nowrap;
+}
+.tab-item .tab-icon { font-size:19px; display:block; margin-bottom:3px; }
+.tab-item.active { color:var(--sand); border-bottom-color:var(--gold); }
+.tab-item:hover:not(.active) { color:rgba(232,220,200,0.75); }
+
+/* Content area */
+.content { flex:1; overflow-y:auto; padding:20px; scroll-behavior:smooth; }
+.content::-webkit-scrollbar { width:6px; }
+.content::-webkit-scrollbar-track { background:var(--sand-light); }
+.content::-webkit-scrollbar-thumb { background:var(--earth); border-radius:3px; }
+
+.section { display:none; }
+.section.active { display:block; }
+
+/* ===== CARDS ===== */
+.section-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:32px; font-weight:300; color:var(--earth-dark);
+  margin-bottom:6px; letter-spacing:2px;
+}
+.section-subtitle { color:var(--warm-gray); font-size:13px; margin-bottom:24px; letter-spacing:1px; }
+
+.card-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.card-grid.single { grid-template-columns:1fr; }
+.card-grid.triple { grid-template-columns:1fr 1fr 1fr; }
+
+.card {
+  background:#fff;
+  border-radius:12px;
+  border:1px solid rgba(139,111,71,0.15);
+  overflow:hidden;
+  box-shadow:0 2px 12px rgba(74,55,40,0.08);
+  transition:transform 0.2s, box-shadow 0.2s;
+}
+.card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(74,55,40,0.14); }
+
+.card-header {
+  background:linear-gradient(135deg, var(--earth-dark) 0%, var(--earth-mid) 100%);
+  padding:18px 20px;
+  display:flex; align-items:center; gap:14px;
+}
+.card-header.ocean { background:linear-gradient(135deg, #2a4a56 0%, var(--ocean) 100%); }
+.card-header.forest { background:linear-gradient(135deg, #2d3d28 0%, var(--forest) 100%); }
+.card-header.coral { background:linear-gradient(135deg, #7a3820 0%, var(--coral) 100%); }
+.card-header.gold { background:linear-gradient(135deg, #7a5c1a 0%, var(--gold) 100%); }
+
+.card-icon { font-size:28px; }
+.card-title-wrap .card-en { font-family:'Cormorant Garamond',serif; color:var(--sand); font-size:18px; font-weight:300; letter-spacing:2px; }
+.card-title-wrap .card-ja { color:rgba(232,220,200,0.65); font-size:11px; margin-top:2px; }
+
+.card-body { padding:18px 20px; }
+.card-body p { font-size:14px; line-height:1.85; color:#4a4038; }
+
+.info-row {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:10px 0; border-bottom:1px solid rgba(139,111,71,0.08);
+  font-size:14px;
+}
+.info-row:last-child { border-bottom:none; }
+.info-label { color:var(--warm-gray); min-width:90px; font-size:12px; letter-spacing:0.5px; padding-top:1px; }
+.info-value { color:var(--charcoal); line-height:1.7; }
+.info-value strong { color:var(--earth); }
+
+.notice-box {
+  background:linear-gradient(135deg, #fdf6ec, #faf0e0);
+  border:1px solid rgba(196,151,58,0.3);
+  border-left:4px solid var(--gold);
+  border-radius:8px; padding:14px 16px;
+  margin-top:12px; font-size:13px; line-height:1.8;
+  color:#5a4530;
+}
+.notice-box .notice-title { font-weight:500; color:var(--earth); margin-bottom:6px; font-size:14px; }
+
+.badge-row { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.badge {
+  background:var(--sand-light); border:1px solid var(--sand);
+  border-radius:20px; padding:4px 12px; font-size:12px; color:var(--earth-dark);
+}
+
+/* ===== WELCOME SECTION ===== */
+.welcome-hero {
+  background:linear-gradient(160deg, var(--earth-dark) 0%, #5c3d25 50%, var(--ocean) 100%);
+  border-radius:14px; padding:36px 32px; margin-bottom:20px;
+  text-align:center; position:relative; overflow:hidden;
+}
+.welcome-hero::before {
+  content:''; position:absolute; inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.welcome-hero .wh-logo { font-family:'Cormorant Garamond',serif; color:var(--sand); font-size:42px; font-weight:300; letter-spacing:8px; display:block; }
+.welcome-hero .wh-tagline { font-family:'Cormorant Garamond',serif; color:rgba(232,220,200,0.7); font-style:italic; font-size:16px; margin-top:8px; letter-spacing:2px; display:block; }
+.welcome-hero .wh-msg { color:rgba(250,248,243,0.85); font-size:15px; margin-top:20px; line-height:1.9; max-width:600px; margin-left:auto; margin-right:auto; }
+
+/* ===== FOOD INGREDIENTS ===== */
+.ingredient-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.ingredient-card {
+  background:#fff; border-radius:12px;
+  border:1px solid rgba(139,111,71,0.12);
+  overflow:hidden; cursor:pointer;
+  transition:all 0.2s;
+  box-shadow:0 2px 8px rgba(74,55,40,0.06);
+}
+.ingredient-card:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(74,55,40,0.14); }
+.ingredient-emoji { font-size:40px; text-align:center; padding:20px 12px 10px; display:block; }
+.ingredient-name { text-align:center; font-size:15px; font-weight:500; color:var(--earth-dark); padding:0 8px; }
+.ingredient-name-small { text-align:center; font-size:11px; color:var(--warm-gray); margin-top:3px; padding:0 8px 16px; }
+
+/* Ingredient modal */
+.modal-overlay {
+  position:fixed; inset:0; z-index:500;
+  background:rgba(30,20,12,0.7); backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity 0.25s;
+}
+.modal-overlay.show { opacity:1; pointer-events:all; }
+.modal-box {
+  background:var(--cream); border-radius:16px;
+  width:88vw; max-width:640px; max-height:82vh;
+  overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  transform:translateY(20px); transition:transform 0.25s;
+}
+.modal-overlay.show .modal-box { transform:translateY(0); }
+.modal-head {
+  background:linear-gradient(135deg, var(--earth-dark), var(--forest));
+  padding:24px 28px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.modal-head-left { display:flex; align-items:center; gap:16px; }
+.modal-head-emoji { font-size:40px; }
+.modal-head-name { font-family:'Cormorant Garamond',serif; color:var(--sand); font-size:26px; font-weight:300; }
+.modal-head-sub { color:rgba(232,220,200,0.6); font-size:12px; margin-top:2px; }
+.modal-close { color:var(--sand); font-size:24px; cursor:pointer; opacity:0.7; padding:4px 8px; }
+.modal-close:hover { opacity:1; }
+.modal-body { padding:22px 28px; }
+.modal-lang-section { margin-bottom:18px; }
+.modal-lang-label {
+  font-size:11px; letter-spacing:2px; color:var(--warm-gray);
+  text-transform:uppercase; margin-bottom:6px; display:block;
+}
+.modal-lang-text { font-size:14px; line-height:1.85; color:#4a4038; }
+.modal-divider { height:1px; background:rgba(139,111,71,0.12); margin:14px 0; }
+
+/* Edit mode */
+.edit-controls {
+  display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center;
+}
+.btn-edit {
+  background:var(--earth); color:#fff;
+  border:none; border-radius:8px; padding:10px 20px;
+  cursor:pointer; font-size:13px; font-family:inherit;
+  display:flex; align-items:center; gap:6px;
+  transition:background 0.2s;
+}
+.btn-edit:hover { background:var(--earth-dark); }
+.btn-edit.green { background:var(--forest); }
+.btn-edit.green:hover { background:#3a5233; }
+.btn-edit.red { background:#8b3a2a; }
+.btn-edit.red:hover { background:#6b2a1a; }
+.btn-add {
+  background:linear-gradient(135deg, var(--earth-dark), var(--earth-mid));
+  color:var(--sand); border:none; border-radius:8px; padding:10px 20px;
+  cursor:pointer; font-size:13px; font-family:inherit;
+  display:flex; align-items:center; gap:6px; transition:all 0.2s;
+}
+.btn-add:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(74,55,40,0.3); }
+
+/* Admin panel */
+.admin-panel {
+  background:var(--sand-light); border:1px solid var(--sand);
+  border-radius:12px; padding:18px; margin-bottom:20px;
+  display:none;
+}
+.admin-panel.show { display:block; }
+.admin-panel h3 { font-family:'Cormorant Garamond',serif; font-size:20px; color:var(--earth-dark); margin-bottom:14px; }
+
+.edit-card {
+  background:#fff; border:1px solid var(--sand);
+  border-radius:10px; padding:16px; margin-bottom:12px;
+  position:relative;
+}
+.edit-card-header {
+  display:flex; align-items:center; gap:10px; margin-bottom:12px;
+}
+.input-row { display:flex; flex-direction:column; gap:4px; margin-bottom:10px; }
+.input-row label { font-size:11px; color:var(--warm-gray); letter-spacing:1px; }
+.input-row input, .input-row textarea, .input-row select {
+  border:1px solid rgba(139,111,71,0.25); border-radius:6px;
+  padding:8px 12px; font-size:13px; font-family:inherit;
+  background:#faf8f3; color:var(--charcoal);
+  transition:border-color 0.2s; resize:vertical;
+}
+.input-row input:focus, .input-row textarea:focus {
+  outline:none; border-color:var(--earth); background:#fff;
+}
+.emoji-picker-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+.emoji-opt {
+  font-size:22px; cursor:pointer; padding:4px 6px; border-radius:6px;
+  transition:background 0.15s; border:2px solid transparent;
+}
+.emoji-opt:hover { background:var(--sand-light); }
+.emoji-opt.selected { border-color:var(--earth); background:var(--sand-light); }
+.del-btn {
+  position:absolute; top:12px; right:12px;
+  background:#8b3a2a; color:#fff; border:none; border-radius:6px;
+  padding:5px 10px; cursor:pointer; font-size:12px; font-family:inherit;
+}
+.del-btn:hover { background:#6b2a1a; }
+
+/* ===== FREE TALK ===== */
+.talk-container {
+  display:flex; flex-direction:column; height:calc(100vh - 130px);
+}
+.talk-messages {
+  flex:1; overflow-y:auto; padding:16px 0;
+  display:flex; flex-direction:column; gap:14px;
+}
+.talk-messages::-webkit-scrollbar { width:4px; }
+.talk-messages::-webkit-scrollbar-thumb { background:var(--earth); border-radius:2px; }
+
+.msg {
+  display:flex; gap:12px; animation:msgIn 0.3s ease;
+}
+@keyframes msgIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+.msg.staff { flex-direction:row-reverse; }
+
+.msg-avatar {
+  width:38px; height:38px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:17px; flex-shrink:0;
+}
+.msg.guest .msg-avatar { background:var(--sand-light); border:2px solid var(--sand); }
+.msg.staff .msg-avatar { background:var(--earth-dark); border:2px solid var(--earth-mid); }
+
+.msg-bubble {
+  max-width:72%; padding:12px 16px; border-radius:14px;
+  font-size:14px; line-height:1.75; position:relative;
+}
+.msg.guest .msg-bubble { background:var(--sand-light); border:1px solid var(--sand); border-radius:14px 14px 14px 4px; color:var(--charcoal); }
+.msg.staff .msg-bubble { background:var(--earth-dark); color:var(--sand-light); border-radius:14px 14px 4px 14px; }
+.msg-time { font-size:10px; opacity:0.5; margin-top:4px; }
+.msg.guest .msg-time { text-align:left; }
+.msg.staff .msg-time { text-align:right; }
+
+.talk-input-area {
+  background:#fff; border-top:1px solid var(--sand);
+  padding:14px 16px; display:flex; gap:10px; align-items:flex-end;
+  flex-shrink:0;
+}
+.talk-input {
+  flex:1; border:1px solid rgba(139,111,71,0.25);
+  border-radius:10px; padding:10px 14px; font-size:14px;
+  font-family:inherit; resize:none; max-height:100px;
+  background:var(--cream); color:var(--charcoal);
+  transition:border-color 0.2s;
+}
+.talk-input:focus { outline:none; border-color:var(--earth); }
+.send-btn {
+  background:var(--earth-dark); color:var(--sand);
+  border:none; border-radius:10px; padding:10px 18px;
+  cursor:pointer; font-size:20px; line-height:1;
+  transition:all 0.2s; flex-shrink:0;
+}
+.send-btn:hover { background:var(--earth-mid); transform:scale(1.05); }
+
+.talk-role-toggle {
+  display:flex; gap:0; margin-bottom:14px;
+  background:var(--sand-light); border-radius:10px;
+  padding:4px; border:1px solid var(--sand); width:fit-content;
+}
+.role-btn {
+  padding:8px 20px; border-radius:7px; cursor:pointer;
+  font-size:13px; border:none; background:transparent;
+  color:var(--warm-gray); font-family:inherit; transition:all 0.2s;
+}
+.role-btn.active { background:var(--earth-dark); color:var(--sand); }
+
+/* ===== RENTAL SECTION ===== */
+.rental-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.rental-item {
+  background:#fff; border-radius:12px;
+  border:1px solid rgba(139,111,71,0.12);
+  padding:22px 16px; text-align:center;
+  box-shadow:0 2px 8px rgba(74,55,40,0.06);
+}
+.rental-item .r-icon { font-size:36px; margin-bottom:10px; display:block; }
+.rental-item .r-name { font-size:14px; font-weight:500; color:var(--earth-dark); margin-bottom:8px; }
+.rental-item .r-price {
+  display:inline-block; background:linear-gradient(135deg,var(--earth-dark),var(--earth-mid));
+  color:var(--sand); border-radius:6px; padding:5px 14px; font-size:14px;
+}
+.rental-item .r-price span { font-family:'Cormorant Garamond',serif; font-size:20px; }
+
+/* ===== PASSWORD MODAL ===== */
+.pw-modal {
+  position:fixed; inset:0; z-index:600;
+  background:rgba(30,20,12,0.75); backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity 0.25s;
+}
+.pw-modal.show { opacity:1; pointer-events:all; }
+.pw-box {
+  background:var(--cream); border-radius:16px; padding:36px 40px;
+  width:380px; text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  transform:translateY(20px); transition:transform 0.25s;
+}
+.pw-modal.show .pw-box { transform:translateY(0); }
+.pw-box h3 { font-family:'Cormorant Garamond',serif; font-size:26px; color:var(--earth-dark); margin-bottom:6px; }
+.pw-box p { color:var(--warm-gray); font-size:13px; margin-bottom:20px; }
+.pw-input {
+  width:100%; border:1px solid rgba(139,111,71,0.3);
+  border-radius:8px; padding:12px 16px; font-size:16px;
+  font-family:inherit; text-align:center; letter-spacing:4px;
+  background:#faf8f3; color:var(--charcoal); margin-bottom:14px;
+}
+.pw-input:focus { outline:none; border-color:var(--earth); }
+.pw-btn {
+  width:100%; background:var(--earth-dark); color:var(--sand);
+  border:none; border-radius:8px; padding:13px; font-size:15px;
+  font-family:inherit; cursor:pointer; transition:background 0.2s;
+}
+.pw-btn:hover { background:var(--earth-mid); }
+.pw-error { color:#8b3a2a; font-size:13px; margin-top:8px; }
+.pw-cancel { color:var(--warm-gray); font-size:13px; cursor:pointer; margin-top:12px; display:inline-block; }
+.pw-cancel:hover { color:var(--earth); }
+
+/* ===== QA SECTION ===== */
+.qa-item {
+  background:#fff; border-radius:12px;
+  border:1px solid rgba(139,111,71,0.12);
+  margin-bottom:12px; overflow:hidden;
+  box-shadow:0 2px 8px rgba(74,55,40,0.05);
+}
+.qa-q {
+  padding:16px 20px; cursor:pointer;
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:14px; font-weight:500; color:var(--earth-dark);
+  transition:background 0.2s;
+}
+.qa-q:hover { background:var(--sand-light); }
+.qa-q .qa-arrow { color:var(--earth); font-size:18px; transition:transform 0.25s; }
+.qa-a {
+  padding:0 20px; max-height:0; overflow:hidden;
+  transition:all 0.3s ease; color:#4a4038; font-size:14px; line-height:1.85;
+}
+.qa-item.open .qa-q { background:var(--sand-light); }
+.qa-item.open .qa-q .qa-arrow { transform:rotate(180deg); }
+.qa-item.open .qa-a { max-height:300px; padding:12px 20px 18px; }
+
+/* category filter */
+.cat-filter { display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap; }
+.cat-btn {
+  padding:6px 16px; border-radius:20px; font-size:12px;
+  border:1px solid var(--sand); background:var(--sand-light);
+  color:var(--earth-dark); cursor:pointer; transition:all 0.2s; font-family:inherit;
+}
+.cat-btn.active { background:var(--earth-dark); color:var(--sand); border-color:var(--earth-dark); }
+
+/* ===== NOTICES ===== */
+.notice-big {
+  background:linear-gradient(135deg, #fff8ee, #fdf3e0);
+  border:1px solid rgba(196,151,58,0.25);
+  border-left:5px solid var(--gold);
+  border-radius:10px; padding:18px 20px; margin-bottom:14px;
+}
+.notice-big h4 { color:var(--earth-dark); font-size:15px; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+.notice-big p { font-size:13px; line-height:1.85; color:#5a4530; }
+
+.warn-box {
+  background:linear-gradient(135deg, #fff3f0, #fde8e2);
+  border:1px solid rgba(184,104,64,0.25);
+  border-left:5px solid var(--coral);
+  border-radius:10px; padding:18px 20px; margin-bottom:14px;
+}
+.warn-box h4 { color:#7a3820; font-size:15px; margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+.warn-box p, .warn-box li { font-size:13px; line-height:1.85; color:#6a3a28; }
+.warn-box ul { padding-left:16px; }
+
+/* responsive */
+@media (max-width: 700px) {
+  .card-grid { grid-template-columns:1fr; }
+  .card-grid.triple { grid-template-columns:1fr 1fr; }
+  .ingredient-grid { grid-template-columns:1fr 1fr; }
+  .rental-grid { grid-template-columns:1fr 1fr; }
+  .lang-grid { width:300px; }
+}
+
+/* Typing indicator */
+.typing { display:flex; gap:5px; align-items:center; padding:10px 14px; }
+.typing span {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--warm-gray);
+  animation:bounce 1.2s infinite;
+}
+.typing span:nth-child(2) { animation-delay:0.2s; }
+.typing span:nth-child(3) { animation-delay:0.4s; }
+@keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+
+.scroll-top {
+  position:fixed; bottom:24px; right:20px;
+  background:var(--earth-dark); color:var(--sand);
+  border:none; border-radius:50%; width:44px; height:44px;
+  font-size:18px; cursor:pointer; display:none;
+  align-items:center; justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,0.25); z-index:100;
+  transition:all 0.2s;
+}
+.scroll-top.show { display:flex; }
+.scroll-top:hover { background:var(--earth-mid); transform:translateY(-2px); }
+</style>
+</head>
+<body>
+
+<!-- LANGUAGE SPLASH -->
+<div id="splash">
+  <div class="splash-logo">
+    <span class="ww">WASSA WASSA</span>
+    <span class="tagline">海と星空の小さな宿 · Okinawa Yanbaru</span>
+  </div>
+  <div class="splash-divider"></div>
+  <div class="lang-prompt">Please select your language</div>
+  <div class="lang-grid">
+    <button class="lang-btn" onclick="setLang('en')">
+      <span class="flag">🇬🇧</span>
+      <span class="lname">English</span>
+      <span class="lsub">English</span>
+    </button>
+    <button class="lang-btn" onclick="setLang('zh-tw')">
+      <span class="flag">🇹🇼</span>
+      <span class="lname">繁體中文</span>
+      <span class="lsub">Traditional Chinese</span>
+    </button>
+    <button class="lang-btn" onclick="setLang('zh-cn')">
+      <span class="flag">🇨🇳</span>
+      <span class="lname">简体中文</span>
+      <span class="lsub">Simplified Chinese</span>
+    </button>
+    <button class="lang-btn" onclick="setLang('ko')">
+      <span class="flag">🇰🇷</span>
+      <span class="lname">한국어</span>
+      <span class="lsub">Korean</span>
+    </button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="header">
+    <div class="header-logo">WASSA WASSA</div>
+    <div class="header-right">
+      <span id="curLangFlag" class="cur-lang-flag">🇬🇧</span>
+      <button class="lang-chip" onclick="showSplash()" id="langChipBtn">EN</button>
+    </div>
+  </div>
+
+  <div class="tab-bar" id="tabBar">
+    <div class="tab-item active" onclick="showTab('welcome')" data-tab="welcome">
+      <span class="tab-icon">🏡</span>
+      <span class="tab-label" data-key="tab_welcome">Welcome</span>
+    </div>
+    <div class="tab-item" onclick="showTab('facility')" data-tab="facility">
+      <span class="tab-icon">🛏</span>
+      <span class="tab-label" data-key="tab_facility">Rooms</span>
+    </div>
+    <div class="tab-item" onclick="showTab('checkin')" data-tab="checkin">
+      <span class="tab-icon">🗝</span>
+      <span class="tab-label" data-key="tab_checkin">Check-in</span>
+    </div>
+    <div class="tab-item" onclick="showTab('food')" data-tab="food">
+      <span class="tab-icon">🍽</span>
+      <span class="tab-label" data-key="tab_food">Cuisine</span>
+    </div>
+    <div class="tab-item" onclick="showTab('ingredients')" data-tab="ingredients">
+      <span class="tab-icon">🌿</span>
+      <span class="tab-label" data-key="tab_ingredients">Ingredients</span>
+    </div>
+    <div class="tab-item" onclick="showTab('rental')" data-tab="rental">
+      <span class="tab-icon">🏄</span>
+      <span class="tab-label" data-key="tab_rental">Rental</span>
+    </div>
+    <div class="tab-item" onclick="showTab('qa')" data-tab="qa">
+      <span class="tab-icon">❓</span>
+      <span class="tab-label" data-key="tab_qa">Q&amp;A</span>
+    </div>
+    <div class="tab-item" onclick="showTab('notice')" data-tab="notice">
+      <span class="tab-icon">📋</span>
+      <span class="tab-label" data-key="tab_notice">Notice</span>
+    </div>
+    <div class="tab-item" onclick="showTab('talk')" data-tab="talk">
+      <span class="tab-icon">💬</span>
+      <span class="tab-label" data-key="tab_talk">Free Talk</span>
+    </div>
+  </div>
+
+  <div class="content" id="mainContent">
+
+    <!-- WELCOME -->
+    <div class="section active" id="sec-welcome">
+      <div class="welcome-hero">
+        <span class="wh-logo">WASSA WASSA</span>
+        <span class="wh-tagline" data-key="welcome_tagline">A small inn by the sea and under the stars · Okinawa Yanbaru</span>
+        <p class="wh-msg" data-key="welcome_msg">
+          Welcome to WASSA WASSA. We are delighted to have you with us.<br>
+          Our inn is a small, family-run retreat nestled in the pristine nature of northern Okinawa.<br>
+          We hope your stay brings you peace, wonder, and unforgettable memories.
+        </p>
+      </div>
+      <div class="card-grid triple">
+        <div class="card">
+          <div class="card-header ocean">
+            <span class="card-icon">🌊</span>
+            <div class="card-title-wrap">
+              <div class="card-en">Ocean & Nature</div>
+              <div class="card-ja" data-key="welcome_ocean_sub">Yanbaru wilderness</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p data-key="welcome_ocean_text">Surrounded by the pristine emerald ocean and lush Yanbaru forest. Fireflies illuminate the garden from May to November (45 species).</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header gold">
+            <span class="card-icon">⭐</span>
+            <div class="card-title-wrap">
+              <div class="card-en">Starry Skies</div>
+              <div class="card-ja" data-key="welcome_star_sub">Milky Way above</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p data-key="welcome_star_text">Far from city lights, our rooftop terrace offers breathtaking views of the Milky Way. Enjoy the outdoor bath under a blanket of stars.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header forest">
+            <span class="card-icon">👫</span>
+            <div class="card-title-wrap">
+              <div class="card-en">Personal Care</div>
+              <div class="card-ja" data-key="welcome_care_sub">Family-run hospitality</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p data-key="welcome_care_text">Run by a couple with heartfelt hospitality. We may be small, but every detail of your stay is attended to with genuine warmth and care.</p>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px;" class="card-grid">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">📍</span>
+            <div class="card-title-wrap">
+              <div class="card-en">Location</div>
+              <div class="card-ja">Address · アクセス</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="info-row"><span class="info-label">Address</span><span class="info-value">〒905-1307 沖縄県国頭郡大宜味村根路銘97番地</span></div>
+            <div class="info-row"><span class="info-label">TEL</span><span class="info-value"><strong>0980-50-2500</strong></span></div>
+            <div class="info-row"><span class="info-label">Email</span><span class="info-value">wassa@wassa-okinawa.com</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header coral">
+            <span class="card-icon">🆘</span>
+            <div class="card-title-wrap">
+              <div class="card-en">Emergency</div>
+              <div class="card-ja" data-key="emergency_sub">For urgent matters</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="info-row"><span class="info-label" data-key="emergency_inn">Inn</span><span class="info-value"><strong>0980-50-2500</strong></span></div>
+            <div class="info-row"><span class="info-label" data-key="emergency_police">Police</span><span class="info-value">110</span></div>
+            <div class="info-row"><span class="info-label" data-key="emergency_fire">Ambulance</span><span class="info-value">119</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FACILITY -->
+    <div class="section" id="sec-facility">
+      <div class="section-title" data-key="facility_title">Rooms & Facilities</div>
+      <div class="section-subtitle" data-key="facility_sub">Two room types and shared amenities</div>
+      <div class="card-grid single">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">🛏</span>
+            <div class="card-title-wrap">
+              <div class="card-en">Superior Twin</div>
+              <div class="card-ja" data-key="superior_sub">2 rooms · 1–4 guests</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p data-key="superior_desc">Spacious one-room design with 3.3m ceilings, earth-tone interiors, and a private garden. From May to November, 45 species of fireflies light up the garden — an unforgettable natural experience.</p>
+            <div style="margin-top:14px;">
+              <div class="info-row"><span class="info-label" data-key="fac_beds">Beds</span><span class="info-value" data-key="superior_beds">2 beds (futon provided for 3rd+ guests)</span></div>
+              <div class="info-row"><span class="info-label" data-key="fac_bath">Bathroom</span><span class="info-value" data-key="superior_bath">Shared clawfoot bathtub + dual-head shower</span></div>
+              <div class="info-row"><span class="info-label" data-key="fac_amenity">Amenities</span><span class="info-value" data-key="superior_amenity">Towels, toothbrush, shampoo, conditioner, body wash, razor, cotton swabs</span></div>
+              <div class="info-row"><span class="info-label">Wi-Fi / A/C</span><span class="info-value" data-key="fac_included">Included</span></div>
+              <div class="info-row"><span class="info-label">Patio</span><span class="info-value" data-key="superior_patio">Shared outdoor patio adjacent to bathroom</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header gold">
+            <span class="card-icon">🏡</span>
+            <div class="card-title-wrap">
+              <div class="card-en">Deluxe Twin "Yanbaru Routine"</div>
+              <div class="card-ja" data-key="deluxe_sub">1 room only · 1–2 guests</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p data-key="deluxe_desc">A fully private standalone cottage with refined interiors. Escape from everyday life and enjoy the freedom of your own villa.</p>
+            <div style="margin-top:14px;">
+              <div class="info-row"><span class="info-label" data-key="fac_beds">Beds</span><span class="info-value" data-key="deluxe_beds">2 beds (private bathroom included)</span></div>
+              <div class="info-row"><span class="info-label">Bath</span><span class="info-value" data-key="deluxe_bath">Private "Oil Veil Oxygen Bubble Bath" (moisturizing micro-oil bubbles)</span></div>
+              <div class="info-row"><span class="info-label">Kitchen</span><span class="info-value" data-key="deluxe_kitchen">Full kitchen with cookware and tableware</span></div>
+              <div class="info-row"><span class="info-label">Rooftop</span><span class="info-value" data-key="deluxe_roof">Exclusive 180° panoramic ocean-view rooftop terrace</span></div>
+              <div class="info-row"><span class="info-label">TV</span><span class="info-value" data-key="deluxe_tv">Built-in TV (Superior Twin: available on request)</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header ocean">
+            <span class="card-icon">♨️</span>
+            <div class="card-title-wrap">
+              <div class="card-en">Shared Open-Air Bath</div>
+              <div class="card-ja" data-key="bath_sub">Private rental hot spring</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p data-key="bath_desc">Enjoy a private open-air bath with breathtaking ocean views. Swim in the sea by day, then soak under a canopy of stars at night. A truly Okinawan luxury experience.</p>
+            <div class="notice-box" style="margin-top:12px;">
+              <div class="notice-title">⚠️ <span data-key="bath_rule_title">Important</span></div>
+              <p data-key="bath_rule">Swimwear must be worn at all times in the open-air bath.</p>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header forest">
+            <span class="card-icon">🌅</span>
+            <div class="card-title-wrap">
+              <div class="card-en">Rooftop Terrace (42 tsubo)</div>
+              <div class="card-ja" data-key="terrace_sub">≈ 139m² shared rooftop</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p data-key="terrace_desc">A spacious rooftop terrace with sun loungers overlooking the endless ocean. Watch the sunset, stargaze, or simply relax with the sound of waves. Pure Okinawan bliss.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECK-IN/OUT -->
+    <div class="section" id="sec-checkin">
+      <div class="section-title" data-key="checkin_title">Check-in & Check-out</div>
+      <div class="section-subtitle" data-key="checkin_sub">Important timings and procedures</div>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">🔑</span>
+            <div class="card-title-wrap">
+              <div class="card-en">Check-in</div>
+              <div class="card-ja" data-key="ci_sub">Arrival times</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="info-row"><span class="info-label" data-key="ci_dinner">With Dinner</span><span class="info-value"><strong>16:00 – 19:00</strong></span></div>
+            <div class="info-row"><span class="info-label" data-key="ci_nodin">Room Only / Breakfast</span><span class="info-value"><strong>16:00 – 22:00</strong></span></div>
+            <div class="notice-box" style="margin-top:10px;">
+              <p data-key="ci_notice">Early check-in is not available. Staff may be out for preparation and shopping. Please arrive from 16:00.</p>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header coral">
+            <span class="card-icon">🚪</span>
+            <div class="card-title-wrap">
+              <div class="card-en">Check-out</div>
+              <div class="card-ja" data-key="co_sub">Departure</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="info-row"><span class="info-label" data-key="co_standard">Standard</span><span class="info-value"><strong data-key="co_time">By 10:00</strong></span></div>
+            <div class="info-row"><span class="info-label" data-key="co_parking">Parking only</span><span class="info-value" data-key="co_parking_time">Until 12:00 (no charge)</span></div>
+            <div class="info-row"><span class="info-label" data-key="co_late">Late check-out</span><span class="info-value" data-key="co_late_fee">¥2,200 / person / hour (room usable until 12:00)</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card-grid single" style="margin-top:14px;">
+        <div class="card">
+          <div class="card-header gold">
+            <span class="card-icon">📋</span>
+            <div class="card-title-wrap">
+              <div class="card-en">Cancellation Policy</div>
+              <div class="card-ja" data-key="cancel_sub">キャンセルポリシー</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="info-row"><span class="info-label" data-key="cancel_7">7+ days</span><span class="info-value" data-key="cancel_7_fee">No charge</span></div>
+            <div class="info-row"><span class="info-label" data-key="cancel_3">3–6 days</span><span class="info-value" data-key="cancel_3_fee">50% of stay</span></div>
+            <div class="info-row"><span class="info-label" data-key="cancel_1">1–2 days</span><span class="info-value" data-key="cancel_1_fee">80% of stay</span></div>
+            <div class="info-row"><span class="info-label" data-key="cancel_0">Same day / No-show</span><span class="info-value" data-key="cancel_0_fee">100% of stay</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUISINE -->
+    <div class="section" id="sec-food">
+      <div class="section-title" data-key="food_title">Cuisine</div>
+      <div class="section-subtitle" data-key="food_sub">Okinawan flavors crafted with local ingredients</div>
+      <div class="card-grid single">
+        <div class="card">
+          <div class="card-header forest">
+            <span class="card-icon">🍱</span>
+            <div class="card-title-wrap">
+              <div class="card-en">About Our Meals</div>
+              <div class="card-ja" data-key="food_about_sub">Local & seasonal</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <p data-key="food_about_text">Our meals celebrate the fresh seasonal ingredients of Okinawa's Yanbaru region — locally caught fish, island vegetables, and traditional Okinawan flavors, prepared with care for each guest.</p>
+            <div style="margin-top:14px;">
+              <div class="info-row"><span class="info-label" data-key="food_allergy">Allergies</span><span class="info-value" data-key="food_allergy_txt">Please inform us at least 3 days before arrival. We will do our best to accommodate.</span></div>
+              <div class="info-row"><span class="info-label" data-key="food_dinner_time">Dinner</span><span class="info-value" data-key="food_dinner_loc">Served on the rooftop terrace (indoors during bad weather)</span></div>
+              <div class="info-row"><span class="info-label" data-key="food_typhoon">Typhoon</span><span class="info-value" data-key="food_typhoon_txt">In severe weather, meal service may be limited.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header gold">
+            <span class="card-icon">🌟</span>
+            <div class="card-title-wrap">
+              <div class="card-en">Okinawan Highlights</div>
+              <div class="card-ja" data-key="food_highlights_sub">What to look forward to</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="badge-row">
+              <span class="badge">🐟 <span data-key="food_b1">Sashimi</span></span>
+              <span class="badge">🥬 <span data-key="food_b2">Island Vegetables</span></span>
+              <span class="badge">🍖 <span data-key="food_b3">Rafute Pork</span></span>
+              <span class="badge">🍜 <span data-key="food_b4">Okinawa Soba</span></span>
+              <span class="badge">🦑 <span data-key="food_b5">Fresh Seafood</span></span>
+              <span class="badge">🌿 <span data-key="food_b6">Goya Champuru</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INGREDIENTS -->
+    <div class="section" id="sec-ingredients">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; flex-wrap:wrap; gap:10px;">
+        <div>
+          <div class="section-title" data-key="ing_title">Okinawan Ingredients</div>
+          <div class="section-subtitle" data-key="ing_sub">Tap to learn about each ingredient</div>
+        </div>
+        <button class="btn-add" onclick="showPasswordModal()">⚙️ <span data-key="ing_edit_btn">Edit (Owner)</span></button>
+      </div>
+
+      <!-- Admin panel (hidden until password) -->
+      <div class="admin-panel" id="adminPanel">
+        <h3>🌿 <span data-key="ing_admin_title">Ingredient Manager</span></h3>
+        <div class="edit-controls">
+          <button class="btn-edit green" onclick="addIngredient()">＋ <span data-key="ing_add">Add New</span></button>
+          <button class="btn-edit" onclick="saveIngredients()">💾 <span data-key="ing_save">Save Changes</span></button>
+          <button class="btn-edit red" onclick="closeAdmin()">✕ <span data-key="ing_close">Close</span></button>
+        </div>
+        <div id="editList"></div>
+      </div>
+
+      <!-- Category filter -->
+      <div class="cat-filter" id="ingFilter">
+        <button class="cat-btn active" onclick="filterIng('all')" data-cat="all" data-key="ing_all">All</button>
+        <button class="cat-btn" onclick="filterIng('vegetable')" data-cat="vegetable" data-key="ing_veg">Vegetables</button>
+        <button class="cat-btn" onclick="filterIng('seafood')" data-cat="seafood" data-key="ing_sea">Seafood</button>
+        <button class="cat-btn" onclick="filterIng('fruit')" data-cat="fruit" data-key="ing_fruit">Fruits</button>
+        <button class="cat-btn" onclick="filterIng('other')" data-cat="other" data-key="ing_other">Other</button>
+      </div>
+
+      <div class="ingredient-grid" id="ingredientGrid"></div>
+    </div>
+
+    <!-- RENTAL -->
+    <div class="section" id="sec-rental">
+      <div class="section-title" data-key="rental_title">Beach Rentals</div>
+      <div class="section-subtitle" data-key="rental_sub">Daily rates · Tax included</div>
+      <div class="rental-grid" id="rentalGrid">
+        <div class="rental-item"><span class="r-icon">⛱️</span><div class="r-name" data-key="r1">Beach Parasol & Chair</div><div class="r-price">¥<span>1,100</span></div></div>
+        <div class="rental-item"><span class="r-icon">🏊</span><div class="r-name" data-key="r2">Float Ring</div><div class="r-price">¥<span>550</span></div></div>
+        <div class="rental-item"><span class="r-icon">👕</span><div class="r-name" data-key="r3">Rash Guard</div><div class="r-price">¥<span>550</span></div></div>
+        <div class="rental-item"><span class="r-icon">🩱</span><div class="r-name" data-key="r4">Rash Spats</div><div class="r-price">¥<span>550</span></div></div>
+        <div class="rental-item"><span class="r-icon">🤿</span><div class="r-name" data-key="r5">Wetsuit</div><div class="r-price">¥<span>1,650</span></div></div>
+      </div>
+      <div class="notice-box" style="margin-top:16px;">
+        <div class="notice-title">📝 <span data-key="rental_note_title">Note</span></div>
+        <p data-key="rental_note">All prices are per day and include tax. Please ask staff for rentals.</p>
+      </div>
+    </div>
+
+    <!-- Q&A -->
+    <div class="section" id="sec-qa">
+      <div class="section-title" data-key="qa_title">FAQ</div>
+      <div class="section-subtitle" data-key="qa_sub">Frequently asked questions</div>
+      <div id="qaList"></div>
+    </div>
+
+    <!-- NOTICE -->
+    <div class="section" id="sec-notice">
+      <div class="section-title" data-key="notice_title">Important Notices</div>
+      <div class="section-subtitle" data-key="notice_sub">Please read before enjoying your stay</div>
+      <div id="noticeList"></div>
+    </div>
+
+    <!-- FREE TALK -->
+    <div class="section" id="sec-talk">
+      <div class="talk-container">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+          <div>
+            <div class="section-title" data-key="talk_title">Free Talk</div>
+            <div class="section-subtitle" data-key="talk_sub">Message staff directly</div>
+          </div>
+          <div class="talk-role-toggle">
+            <button class="role-btn active" onclick="setRole('guest')" id="btnGuest" data-key="talk_guest">Guest 👤</button>
+            <button class="role-btn" onclick="setRole('staff')" id="btnStaff" data-key="talk_staff">Staff 👩‍💼</button>
+          </div>
+        </div>
+        <div class="talk-messages" id="talkMessages">
+          <div class="msg staff">
+            <div class="msg-avatar">👩‍💼</div>
+            <div>
+              <div class="msg-bubble" id="welcomeMsgBubble">Welcome to WASSA WASSA! 🌿 Please feel free to ask us anything about your stay.</div>
+              <div class="msg-time" id="welcomeMsgTime"></div>
+            </div>
+          </div>
+        </div>
+        <div class="talk-input-area">
+          <textarea class="talk-input" id="talkInput" rows="1" placeholder="Type a message..." onkeydown="talkKeyDown(event)" oninput="autoResize(this)"></textarea>
+          <button class="send-btn" onclick="sendMessage()">➤</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /app -->
+
+<!-- Ingredient Modal -->
+<div class="modal-overlay" id="ingModal" onclick="closeIngModal(event)">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-head-left">
+        <span class="modal-head-emoji" id="modalEmoji">🌿</span>
+        <div>
+          <div class="modal-head-name" id="modalName">Ingredient</div>
+          <div class="modal-head-sub" id="modalCat">Category</div>
+        </div>
+      </div>
+      <span class="modal-close" onclick="closeIngModal()">✕</span>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- Password Modal -->
+<div class="pw-modal" id="pwModal">
+  <div class="pw-box">
+    <h3>🔐 Owner Access</h3>
+    <p data-key="pw_desc">Enter password to edit ingredients</p>
+    <input type="password" class="pw-input" id="pwInput" placeholder="••••••" onkeydown="pwKeyDown(event)">
+    <button class="pw-btn" onclick="checkPassword()" data-key="pw_btn">Enter</button>
+    <div class="pw-error" id="pwError"></div>
+    <div class="pw-cancel" onclick="closePwModal()" data-key="pw_cancel">Cancel</div>
+  </div>
+</div>
+
+<button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()">↑</button>
+
+<script>
+// ===== MULTILINGUAL DATA =====
+const OWNER_PASSWORD = "wassa2024";
+
+const T = {
+  en: {
+    tab_welcome:"Welcome", tab_facility:"Rooms", tab_checkin:"Check-in",
+    tab_food:"Cuisine", tab_ingredients:"Ingredients", tab_rental:"Rental",
+    tab_qa:"Q&A", tab_notice:"Notice", tab_talk:"Free Talk",
+    welcome_tagline:"A small inn by the sea and under the stars · Okinawa Yanbaru",
+    welcome_msg:"Welcome to WASSA WASSA. We are delighted to have you with us.<br>Our inn is a small, family-run retreat nestled in the pristine nature of northern Okinawa.<br>We hope your stay brings you peace, wonder, and unforgettable memories.",
+    welcome_ocean_sub:"Yanbaru wilderness", welcome_star_sub:"Milky Way above", welcome_care_sub:"Family-run hospitality",
+    welcome_ocean_text:"Surrounded by pristine emerald ocean and lush Yanbaru forest. Fireflies illuminate the garden from May to November (45 species).",
+    welcome_star_text:"Far from city lights, our rooftop offers breathtaking views of the Milky Way. Enjoy the outdoor bath under a blanket of stars.",
+    welcome_care_text:"Run by a couple with heartfelt hospitality. Every detail of your stay is attended to with genuine warmth and care.",
+    emergency_sub:"For urgent matters", emergency_inn:"Inn", emergency_police:"Police", emergency_fire:"Ambulance",
+    facility_title:"Rooms & Facilities", facility_sub:"Two room types and shared amenities",
+    superior_sub:"2 rooms · 1–4 guests", superior_desc:"Spacious one-room design with 3.3m ceilings, earth-tone interiors, and a private garden. Fireflies light up the garden May–November.",
+    superior_beds:"2 beds (futon added for 3rd+ guests)", superior_bath:"Shared clawfoot bathtub + dual-head shower",
+    superior_amenity:"Towels, toothbrush, shampoo, conditioner, body wash, razor, cotton swabs",
+    fac_included:"Included", superior_patio:"Shared outdoor patio adjacent to bathroom",
+    deluxe_sub:"1 room only · 1–2 guests", deluxe_desc:"A fully private standalone cottage with refined interiors. Your own villa in nature.",
+    deluxe_beds:"2 beds (private bathroom included)", deluxe_bath:"Private Oil Veil Oxygen Bubble Bath",
+    deluxe_kitchen:"Full kitchen with cookware", deluxe_roof:"Exclusive 180° panoramic ocean rooftop", deluxe_tv:"Built-in TV",
+    bath_sub:"Private rental hot spring", bath_desc:"Enjoy a private open-air bath with breathtaking ocean views. Soak under the stars at night.",
+    bath_rule_title:"Important", bath_rule:"Swimwear must be worn at all times in the open-air bath.",
+    terrace_sub:"≈ 139m² shared rooftop", terrace_desc:"A spacious rooftop terrace with sun loungers. Watch sunsets, stargaze, relax with the sound of waves.",
+    fac_beds:"Beds", fac_bath:"Bathroom", fac_amenity:"Amenities",
+    checkin_title:"Check-in & Check-out", checkin_sub:"Important timings and procedures",
+    ci_sub:"Arrival times", ci_dinner:"With Dinner", ci_nodin:"Room Only / Breakfast", ci_notice:"Early check-in is not available. Please arrive from 16:00.",
+    co_sub:"Departure", co_standard:"Standard", co_time:"By 10:00", co_parking:"Parking only", co_parking_time:"Until 12:00 (no charge)",
+    co_late:"Late check-out", co_late_fee:"¥2,200 / person / hour (room usable until 12:00)",
+    cancel_sub:"Cancellation Policy", cancel_7:"7+ days before", cancel_7_fee:"No charge",
+    cancel_3:"3–6 days before", cancel_3_fee:"50% of stay", cancel_1:"1–2 days before", cancel_1_fee:"80% of stay",
+    cancel_0:"Same day / No-show", cancel_0_fee:"100% of stay",
+    food_title:"Cuisine", food_sub:"Okinawan flavors crafted with local ingredients",
+    food_about_sub:"Local & seasonal", food_about_text:"Our meals celebrate the fresh seasonal ingredients of Okinawa's Yanbaru region — locally caught fish, island vegetables, and traditional flavors, prepared with care.",
+    food_allergy:"Allergies", food_allergy_txt:"Please inform us at least 3 days before arrival.",
+    food_dinner_time:"Dinner", food_dinner_loc:"Served on the rooftop terrace (indoors during bad weather)",
+    food_typhoon:"Typhoon", food_typhoon_txt:"In severe weather, meal service may be limited.",
+    food_highlights_sub:"What to look forward to",
+    food_b1:"Sashimi", food_b2:"Island Vegetables", food_b3:"Rafute Pork", food_b4:"Okinawa Soba", food_b5:"Fresh Seafood", food_b6:"Goya Champuru",
+    ing_title:"Okinawan Ingredients", ing_sub:"Tap to learn about each ingredient",
+    ing_edit_btn:"Edit (Owner)", ing_admin_title:"Ingredient Manager", ing_add:"Add New", ing_save:"Save Changes", ing_close:"Close",
+    ing_all:"All", ing_veg:"Vegetables", ing_sea:"Seafood", ing_fruit:"Fruits", ing_other:"Other",
+    rental_title:"Beach Rentals", rental_sub:"Daily rates · Tax included",
+    r1:"Beach Parasol & Chair", r2:"Float Ring", r3:"Rash Guard", r4:"Rash Spats", r5:"Wetsuit",
+    rental_note_title:"Note", rental_note:"All prices are per day and include tax. Please ask staff for rentals.",
+    qa_title:"FAQ", qa_sub:"Frequently asked questions",
+    notice_title:"Important Notices", notice_sub:"Please read before enjoying your stay",
+    talk_title:"Free Talk", talk_sub:"Message staff directly",
+    talk_guest:"Guest 👤", talk_staff:"Staff 👩‍💼",
+    pw_desc:"Enter password to edit ingredients", pw_btn:"Enter", pw_cancel:"Cancel",
+    pw_wrong:"Incorrect password",
+    talk_placeholder:"Type a message...",
+    talk_welcome:"Welcome to WASSA WASSA! 🌿 Please feel free to ask us anything about your stay.",
+  },
+  "zh-tw": {
+    tab_welcome:"歡迎", tab_facility:"客房", tab_checkin:"入住",
+    tab_food:"料理", tab_ingredients:"食材", tab_rental:"租借",
+    tab_qa:"常見問題", tab_notice:"注意事項", tab_talk:"自由交談",
+    welcome_tagline:"面海觀星的小宿 · 沖繩山原",
+    welcome_msg:"歡迎來到 WASSA WASSA。我們非常高興您的到來。<br>我們是一家由夫婦經營的小型旅宿，坐落在沖繩北部純淨的自然之中。<br>願您的住宿帶來寧靜、驚奇與難忘的回憶。",
+    welcome_ocean_sub:"山原的大自然", welcome_star_sub:"銀河就在頭上", welcome_care_sub:"夫婦用心款待",
+    welcome_ocean_text:"被碧綠的大海與茂密的山原森林環抱。5月至11月，庭院中有45種螢火蟲閃爍。",
+    welcome_star_text:"遠離都市燈光，屋頂露台可欣賞壯麗的銀河。在滿天星空下享受露天溫泉。",
+    welcome_care_text:"由夫婦二人用心經營，每一個細節都充滿真摯的溫情與關懷。",
+    emergency_sub:"緊急聯絡", emergency_inn:"旅館", emergency_police:"警察", emergency_fire:"救護車",
+    facility_title:"客房與設施", facility_sub:"兩種客房類型及共用設施",
+    superior_sub:"2間 · 可住1–4人", superior_desc:"寬敞的一室設計，天花板高3.3米，地球色調室內裝潢，附私人庭院。5月至11月可在庭院觀賞螢火蟲。",
+    superior_beds:"2張床（第3位起提供床墊）", superior_bath:"共用貓腳浴缸 + 雙頭淋浴間",
+    superior_amenity:"毛巾、牙刷、洗髮精、潤髮乳、沐浴乳、刮鬍刀、棉棒",
+    fac_included:"提供", superior_patio:"毗鄰浴室的共用露台",
+    deluxe_sub:"1間限定 · 可住1–2人", deluxe_desc:"完全獨立的獨棟客房，精緻的室內設計。如同擁有專屬的別墅，盡情享受自在時光。",
+    deluxe_beds:"2張床（含私人浴室）", deluxe_bath:"專屬「油沫氧美泡湯」（保濕微細油泡）",
+    deluxe_kitchen:"附廚具與餐具的全套廚房", deluxe_roof:"專屬180度全景海景屋頂露台", deluxe_tv:"內建電視",
+    bath_sub:"私人包場露天溫泉", bath_desc:"在壯麗的海景中享受私人露天溫泉。夜晚在滿天星斗下浸泡，無比浪漫。",
+    bath_rule_title:"重要提醒", bath_rule:"使用露天溫泉時，請全程穿著泳衣。",
+    terrace_sub:"約139m²共用屋頂露台", terrace_desc:"寬敞的屋頂露台附躺椅，欣賞夕陽、仰望星空、聆聽海浪聲，盡享沖繩時光。",
+    fac_beds:"床鋪", fac_bath:"浴室", fac_amenity:"備品",
+    checkin_title:"入住與退房", checkin_sub:"重要時間與程序",
+    ci_sub:"抵達時間", ci_dinner:"含晚餐", ci_nodin:"純住宿 / 含早餐", ci_notice:"恕不提供提前入住。請於16:00之後抵達。",
+    co_sub:"退房", co_standard:"標準退房", co_time:"10:00前", co_parking:"僅停車場", co_parking_time:"至12:00（免費）",
+    co_late:"晚退房", co_late_fee:"¥2,200 / 人 / 小時（可使用客房至12:00）",
+    cancel_sub:"取消政策", cancel_7:"7天以上", cancel_7_fee:"免費",
+    cancel_3:"3–6天前", cancel_3_fee:"住宿費50%", cancel_1:"1–2天前", cancel_1_fee:"住宿費80%",
+    cancel_0:"當天 / 未到", cancel_0_fee:"住宿費100%",
+    food_title:"料理", food_sub:"以當地食材精心烹製的沖繩風味",
+    food_about_sub:"在地・當季", food_about_text:"我們的料理以沖繩山原地區新鮮當季食材為主——在地海鮮、島嶼蔬菜，以及傳統沖繩風味，用心為每位賓客準備。",
+    food_allergy:"過敏原", food_allergy_txt:"請於抵達3天前告知，我們將盡力配合。",
+    food_dinner_time:"晚餐", food_dinner_loc:"在屋頂露台提供（惡劣天氣時在室內用餐）",
+    food_typhoon:"颱風時", food_typhoon_txt:"強颱風時，餐點供應可能受到影響。",
+    food_highlights_sub:"期待的美食",
+    food_b1:"生魚片", food_b2:"島蔬菜", food_b3:"沖繩紅燒肉", food_b4:"沖繩麵", food_b5:"新鮮海鮮", food_b6:"苦瓜炒雜錦",
+    ing_title:"沖繩食材介紹", ing_sub:"點選每種食材了解詳情",
+    ing_edit_btn:"編輯（オーナー）", ing_admin_title:"食材管理", ing_add:"新增", ing_save:"保存變更", ing_close:"關閉",
+    ing_all:"全部", ing_veg:"蔬菜", ing_sea:"海鮮", ing_fruit:"水果", ing_other:"其他",
+    rental_title:"海灘租借", rental_sub:"每日費用 · 含稅",
+    r1:"海灘遮陽傘 & 椅", r2:"游泳圈", r3:"防曬衣", r4:"防曬褲", r5:"潛水衣",
+    rental_note_title:"備註", rental_note:"所有費用為每日含稅價格。請向工作人員詢問租借。",
+    qa_title:"常見問題", qa_sub:"常見問題解答",
+    notice_title:"重要注意事項", notice_sub:"請在享受住宿前閱讀",
+    talk_title:"自由交談", talk_sub:"直接與工作人員溝通",
+    talk_guest:"房客 👤", talk_staff:"工作人員 👩‍💼",
+    pw_desc:"請輸入密碼以編輯食材", pw_btn:"確認", pw_cancel:"取消",
+    pw_wrong:"密碼錯誤",
+    talk_placeholder:"輸入訊息...",
+    talk_welcome:"歡迎來到 WASSA WASSA！🌿 如有任何關於住宿的問題，請隨時告訴我們。",
+  },
+  "zh-cn": {
+    tab_welcome:"欢迎", tab_facility:"客房", tab_checkin:"入住",
+    tab_food:"料理", tab_ingredients:"食材", tab_rental:"租借",
+    tab_qa:"常见问题", tab_notice:"注意事项", tab_talk:"自由交谈",
+    welcome_tagline:"面海观星的小宿 · 冲绳山原",
+    welcome_msg:"欢迎来到 WASSA WASSA。我们非常高兴您的到来。<br>我们是一家由夫妇经营的小型旅宿，坐落在冲绳北部纯净的自然之中。<br>愿您的住宿带来宁静、惊喜与难忘的回忆。",
+    welcome_ocean_sub:"山原的大自然", welcome_star_sub:"银河就在头顶", welcome_care_sub:"夫妇用心款待",
+    welcome_ocean_text:"被碧绿的大海与茂密的山原森林环抱。5月至11月，庭院中有45种萤火虫闪烁。",
+    welcome_star_text:"远离城市灯光，屋顶露台可欣赏壮丽的银河。在满天星空下享受露天温泉。",
+    welcome_care_text:"由夫妇二人用心经营，每一个细节都充满真挚的温情与关怀。",
+    emergency_sub:"紧急联络", emergency_inn:"旅馆", emergency_police:"警察", emergency_fire:"救护车",
+    facility_title:"客房与设施", facility_sub:"两种客房类型及共用设施",
+    superior_sub:"2间 · 可住1–4人", superior_desc:"宽敞的一室设计，天花板高3.3米，大地色调室内装潢，附私人庭院。5月至11月可在庭院观赏萤火虫。",
+    superior_beds:"2张床（第3位起提供床垫）", superior_bath:"共用猫脚浴缸 + 双头淋浴间",
+    superior_amenity:"毛巾、牙刷、洗发水、护发素、沐浴露、剃须刀、棉签",
+    fac_included:"提供", superior_patio:"毗邻浴室的共用露台",
+    deluxe_sub:"1间限定 · 可住1–2人", deluxe_desc:"完全独立的独栋客房，精致的室内设计。如同拥有专属的别墅，尽情享受自在时光。",
+    deluxe_beds:"2张床（含私人浴室）", deluxe_bath:"专属「油沫氧美泡浴」（保湿微细油泡）",
+    deluxe_kitchen:"附厨具与餐具的全套厨房", deluxe_roof:"专属180度全景海景屋顶露台", deluxe_tv:"内置电视",
+    bath_sub:"私人包场露天温泉", bath_desc:"在壮丽的海景中享受私人露天温泉。夜晚在满天星斗下浸泡，无比浪漫。",
+    bath_rule_title:"重要提醒", bath_rule:"使用露天温泉时，请全程穿着泳衣。",
+    terrace_sub:"约139m²共用屋顶露台", terrace_desc:"宽敞的屋顶露台附躺椅，欣赏夕阳、仰望星空、聆听海浪声，尽享冲绳时光。",
+    fac_beds:"床铺", fac_bath:"浴室", fac_amenity:"备品",
+    checkin_title:"入住与退房", checkin_sub:"重要时间与程序",
+    ci_sub:"抵达时间", ci_dinner:"含晚餐", ci_nodin:"纯住宿 / 含早餐", ci_notice:"恕不提供提前入住。请于16:00之后抵达。",
+    co_sub:"退房", co_standard:"标准退房", co_time:"10:00前", co_parking:"仅停车场", co_parking_time:"至12:00（免费）",
+    co_late:"延迟退房", co_late_fee:"¥2,200 / 人 / 小时（可使用客房至12:00）",
+    cancel_sub:"取消政策", cancel_7:"7天以上", cancel_7_fee:"免费",
+    cancel_3:"3–6天前", cancel_3_fee:"住宿费50%", cancel_1:"1–2天前", cancel_1_fee:"住宿费80%",
+    cancel_0:"当天 / 未到", cancel_0_fee:"住宿费100%",
+    food_title:"料理", food_sub:"以当地食材精心烹制的冲绳风味",
+    food_about_sub:"在地・当季", food_about_text:"我们的料理以冲绳山原地区新鲜当季食材为主——在地海鲜、岛屿蔬菜，以及传统冲绳风味，用心为每位宾客准备。",
+    food_allergy:"过敏原", food_allergy_txt:"请于抵达3天前告知，我们将尽力配合。",
+    food_dinner_time:"晚餐", food_dinner_loc:"在屋顶露台提供（恶劣天气时在室内用餐）",
+    food_typhoon:"台风时", food_typhoon_txt:"强台风时，餐点供应可能受到影响。",
+    food_highlights_sub:"期待的美食",
+    food_b1:"生鱼片", food_b2:"岛蔬菜", food_b3:"冲绳红烧肉", food_b4:"冲绳面", food_b5:"新鲜海鲜", food_b6:"苦瓜炒杂锦",
+    ing_title:"冲绳食材介绍", ing_sub:"点击每种食材了解详情",
+    ing_edit_btn:"编辑（Owner）", ing_admin_title:"食材管理", ing_add:"新增", ing_save:"保存更改", ing_close:"关闭",
+    ing_all:"全部", ing_veg:"蔬菜", ing_sea:"海鲜", ing_fruit:"水果", ing_other:"其他",
+    rental_title:"海滩租借", rental_sub:"每日费用 · 含税",
+    r1:"海滩遮阳伞 & 椅", r2:"游泳圈", r3:"防晒衣", r4:"防晒裤", r5:"潜水衣",
+    rental_note_title:"备注", rental_note:"所有费用为每日含税价格。请向工作人员询问租借。",
+    qa_title:"常见问题", qa_sub:"常见问题解答",
+    notice_title:"重要注意事项", notice_sub:"请在享受住宿前阅读",
+    talk_title:"自由交谈", talk_sub:"直接与工作人员沟通",
+    talk_guest:"房客 👤", talk_staff:"工作人员 👩‍💼",
+    pw_desc:"请输入密码以编辑食材", pw_btn:"确认", pw_cancel:"取消",
+    pw_wrong:"密码错误",
+    talk_placeholder:"输入消息...",
+    talk_welcome:"欢迎来到 WASSA WASSA！🌿 如有任何关于住宿的问题，请随时告诉我们。",
+  },
+  ko: {
+    tab_welcome:"환영", tab_facility:"객실", tab_checkin:"체크인",
+    tab_food:"요리", tab_ingredients:"식재료", tab_rental:"렌탈",
+    tab_qa:"FAQ", tab_notice:"주의사항", tab_talk:"자유대화",
+    welcome_tagline:"바다와 별빛의 작은 숙소 · 오키나와 얀바루",
+    welcome_msg:"WASSA WASSA에 오신 것을 환영합니다. 함께할 수 있어 기쁩니다.<br>저희 숙소는 오키나와 북부의 청정 자연 속에 자리한 부부 운영 소규모 리트릿입니다.<br>머무시는 동안 평온함과 경이로움, 잊지 못할 추억을 만들어 드리겠습니다.",
+    welcome_ocean_sub:"얀바루 대자연", welcome_star_sub:"은하수가 눈앞에", welcome_care_sub:"부부의 따뜻한 환대",
+    welcome_ocean_text:"에메랄드빛 바다와 울창한 얀바루 숲으로 둘러싸인 곳. 5월부터 11월까지는 45종의 반딧불이가 정원을 수놓습니다.",
+    welcome_star_text:"도시 불빛과 멀리 떨어진 루프탑 테라스에서 은하수를 바라보며, 별빛 아래 노천탕을 즐겨보세요.",
+    welcome_care_text:"부부가 진심을 담아 운영하는 숙소. 소규모이지만 투숙객 한 분 한 분의 편안한 시간을 위해 정성껏 배려합니다.",
+    emergency_sub:"긴급 연락처", emergency_inn:"숙소", emergency_police:"경찰", emergency_fire:"구급차",
+    facility_title:"객실 & 시설", facility_sub:"두 가지 객실 타입과 공용 시설",
+    superior_sub:"2실 · 1–4명", superior_desc:"천장 높이 3.3m의 개방적인 원룸 설계, 어스톤 인테리어, 프라이빗 가든. 5월~11월에는 반딧불이를 관찰할 수 있습니다.",
+    superior_beds:"침대 2개 (3인 이상 이불 제공)", superior_bath:"공용 앤티크 욕조 + 더블헤드 샤워",
+    superior_amenity:"수건, 칫솔, 샴푸, 컨디셔너, 바디워시, 면도기, 면봉",
+    fac_included:"포함", superior_patio:"욕실 인접 공용 파티오",
+    deluxe_sub:"1실 한정 · 1–2명", deluxe_desc:"완전 독립 단독 객실. 세련된 인테리어로 꾸며진 프라이빗 공간을 자유롭게 즐기세요.",
+    deluxe_beds:"침대 2개 (전용 욕실 포함)", deluxe_bath:"전용 「오일 베일 산소 버블 욕조」",
+    deluxe_kitchen:"조리기구 & 식기 완비 주방", deluxe_roof:"전용 180도 파노라마 오션뷰 루프탑", deluxe_tv:"TV 내장",
+    bath_sub:"전세 노천탕", bath_desc:"눈앞에 펼쳐지는 바다 경치와 함께하는 노천탕. 밤에는 별빛 아래 온천을 즐기는 낭만적인 시간.",
+    bath_rule_title:"중요", bath_rule:"노천탕 이용 시 반드시 수영복을 착용해 주세요.",
+    terrace_sub:"약 139m² 공용 루프탑", terrace_desc:"선베드가 놓인 넓은 루프탑에서 석양을 감상하고, 별을 바라보며 파도 소리에 몸을 맡기세요.",
+    fac_beds:"침대", fac_bath:"욕실", fac_amenity:"어메니티",
+    checkin_title:"체크인 & 체크아웃", checkin_sub:"중요 시간 및 절차",
+    ci_sub:"도착 시간", ci_dinner:"저녁 식사 포함", ci_nodin:"숙박만 / 조식 포함", ci_notice:"조기 체크인은 불가합니다. 16:00 이후에 도착해 주세요.",
+    co_sub:"체크아웃", co_standard:"표준", co_time:"10:00까지", co_parking:"주차장만", co_parking_time:"12:00까지 (무료)",
+    co_late:"레이트 체크아웃", co_late_fee:"¥2,200 / 인 / 시간 (12:00까지 객실 사용 가능)",
+    cancel_sub:"취소 정책", cancel_7:"7일 이상 전", cancel_7_fee:"무료",
+    cancel_3:"3–6일 전", cancel_3_fee:"숙박료의 50%", cancel_1:"1–2일 전", cancel_1_fee:"숙박료의 80%",
+    cancel_0:"당일 / 노쇼", cancel_0_fee:"숙박료의 100%",
+    food_title:"요리", food_sub:"현지 식재료로 만든 오키나와 요리",
+    food_about_sub:"로컬 & 제철", food_about_text:"저희 요리는 오키나와 얀바루 지역의 신선한 제철 식재료를 사용합니다. 현지에서 잡은 생선, 섬 채소, 전통 오키나와 맛을 정성껏 준비합니다.",
+    food_allergy:"알레르기", food_allergy_txt:"도착 3일 전까지 알려주시면 최대한 대응해 드리겠습니다.",
+    food_dinner_time:"저녁 식사", food_dinner_loc:"루프탑 테라스에서 제공 (악천후 시 실내)",
+    food_typhoon:"태풍 시", food_typhoon_txt:"심한 태풍 시 식사 제공이 어려울 수 있습니다.",
+    food_highlights_sub:"기대되는 음식",
+    food_b1:"사시미", food_b2:"섬 채소", food_b3:"라후테", food_b4:"오키나와 소바", food_b5:"신선 해산물", food_b6:"고야 찬푸루",
+    ing_title:"오키나와 식재료", ing_sub:"각 식재료를 눌러 자세히 알아보세요",
+    ing_edit_btn:"편집 (오너 전용)", ing_admin_title:"식재료 관리", ing_add:"새로 추가", ing_save:"저장", ing_close:"닫기",
+    ing_all:"전체", ing_veg:"채소", ing_sea:"해산물", ing_fruit:"과일", ing_other:"기타",
+    rental_title:"비치 렌탈", rental_sub:"하루 요금 · 세금 포함",
+    r1:"비치 파라솔 & 의자", r2:"튜브", r3:"래쉬가드", r4:"래쉬스패츠", r5:"웻수트",
+    rental_note_title:"안내", rental_note:"모든 요금은 1일 세금 포함 가격입니다. 렌탈은 직원에게 문의해 주세요.",
+    qa_title:"자주 묻는 질문", qa_sub:"자주 묻는 질문과 답변",
+    notice_title:"중요 주의사항", notice_sub:"숙박 전 꼭 읽어주세요",
+    talk_title:"자유 대화", talk_sub:"직원에게 직접 메시지 보내기",
+    talk_guest:"투숙객 👤", talk_staff:"스태프 👩‍💼",
+    pw_desc:"식재료 편집을 위해 비밀번호를 입력하세요", pw_btn:"확인", pw_cancel:"취소",
+    pw_wrong:"비밀번호가 틀렸습니다",
+    talk_placeholder:"메시지를 입력하세요...",
+    talk_welcome:"WASSA WASSA에 오신 것을 환영합니다! 🌿 숙박에 관해 궁금한 점이 있으시면 언제든 편하게 물어보세요.",
+  }
+};
+
+// ===== INGREDIENT DATA =====
+let ingredients = [
+  { id:1, emoji:"🥬", name:"Goya", nameJa:"ゴーヤー", category:"vegetable",
+    en:"Bitter melon (goya) is one of Okinawa's most iconic vegetables. Its distinctive bitter taste is believed to have health benefits, and it's packed with Vitamin C. Used in 'Goya Champuru' (stir-fry).",
+    "zh-tw":"苦瓜（ゴーヤー）是沖繩最具代表性的蔬菜之一。獨特的苦味據說有益健康，富含維生素C。常用於苦瓜什錦炒。",
+    "zh-cn":"苦瓜（ゴーヤー）是冲绳最具代表性的蔬菜之一。独特的苦味据说有益健康，富含维生素C。常用于苦瓜什锦炒。",
+    ko:"고야(苦瓜)는 오키나와를 대표하는 채소 중 하나입니다. 독특한 쓴맛은 건강에 좋다고 알려져 있으며, 비타민 C가 풍부합니다. '고야 찬푸루(볶음)'에 사용됩니다." },
+  { id:2, emoji:"🐟", name:"Irabu (Sea Snake Soup)", nameJa:"イラブー", category:"seafood",
+    en:"Sea snake (irabu) is a traditional Okinawan delicacy with deep cultural roots. Smoked and used in a flavorful broth, it's rich in collagen and has been valued as a health food for centuries.",
+    "zh-tw":"伊拉布（海蛇）是沖繩傳統珍饈，具有深厚的文化底蘊。燻製後用於高湯，富含膠原蛋白，數百年來被視為健康食品。",
+    "zh-cn":"伊拉布（海蛇）是冲绳传统珍馐，具有深厚的文化底蕴。熏制后用于高汤，富含胶原蛋白，数百年来被视为健康食品。",
+    ko:"이라부(바다뱀)는 오키나와의 전통 진미로 깊은 문화적 뿌리를 가지고 있습니다. 훈제 후 국물에 사용하며, 콜라겐이 풍부하고 수백 년간 건강식품으로 여겨져 왔습니다." },
+  { id:3, emoji:"🥢", name:"Tofu Champuru", nameJa:"豆腐チャンプルー", category:"other",
+    en:"'Champuru' means 'mixed together' in Okinawan dialect. This stir-fry dish combines firm tofu with vegetables and sometimes pork or Spam. A hearty staple of Okinawan home cooking.",
+    "zh-tw":"「什錦炒」在沖繩方言中意為「混合在一起」。這道炒菜將硬豆腐與蔬菜、有時加上豬肉或午餐肉一起翻炒，是沖繩家常料理的主食。",
+    "zh-cn":"「什锦炒」在冲绳方言中意为「混合在一起」。这道炒菜将硬豆腐与蔬菜、有时加上猪肉或午餐肉一起翻炒，是冲绳家常料理的主食。",
+    ko:"'찬푸루'는 오키나와 방언으로 '섞다'를 뜻합니다. 단단한 두부와 채소, 때로는 돼지고기나 스팸을 함께 볶은 오키나와 가정 요리의 정수입니다." },
+  { id:4, emoji:"🍋", name:"Shikuwasa", nameJa:"シークヮーサー", category:"fruit",
+    en:"Shikuwasa is a small citrus fruit native to Okinawa, used like lime or yuzu. Bursting with Vitamin C and nobiletins (antioxidants). The juice is used in dressings, drinks, and sauces.",
+    "zh-tw":"西克瓦莎是沖繩原產的小型柑橘，使用方式類似青檸或柚子。富含維生素C和橙皮苷（抗氧化劑），果汁用於醬料、飲料和調味汁。",
+    "zh-cn":"西克瓦莎是冲绳原产的小型柑橘，使用方式类似青柠或柚子。富含维生素C和橙皮苷（抗氧化剂），果汁用于酱料、饮料和调味汁。",
+    ko:"시쿠와사는 오키나와 원산지의 소형 감귤로, 라임이나 유자처럼 사용됩니다. 비타민 C와 노빌레틴(항산화물질)이 풍부하며, 드레싱·음료·소스에 활용됩니다." },
+  { id:5, emoji:"🐠", name:"Gurukun (Banana Fish)", nameJa:"グルクン", category:"seafood",
+    en:"Gurukun (double-lined fusilier) is the official 'prefectural fish' of Okinawa, found in the clear coral reef waters. Its white flesh is mild and sweet. Often served as sashimi or deep-fried whole.",
+    "zh-tw":"Gurukun（梭魚）是沖繩的縣魚，棲息於清澈的珊瑚礁海域。魚肉色白，味道清甜，常以生魚片或整條油炸的方式烹調。",
+    "zh-cn":"Gurukun（梭鱼）是冲绳的县鱼，栖息于清澈的珊瑚礁海域。鱼肉色白，味道清甜，常以生鱼片或整条油炸的方式烹调。",
+    ko:"구루쿤(파란줄비늘치)은 오키나와의 현어(縣魚)로, 맑은 산호초 바다에 서식합니다. 흰 살코기가 담백하고 달콤하며, 사시미 또는 통째로 튀겨 즐깁니다." },
+  { id:6, emoji:"🌺", name:"Hibiscus (Roselle)", nameJa:"ハイビスカス", category:"other",
+    en:"Hibiscus (roselle variety) is used to make a vivid ruby-red tea in Okinawa. Rich in citric acid and minerals, it has a refreshing sour taste. Also used in jams and traditional herbal remedies.",
+    "zh-tw":"洛神花（芙蓉茄）在沖繩用於製作鮮豔的紅寶石色茶飲，富含檸檬酸和礦物質，口感清新帶酸。也用於果醬和傳統草藥。",
+    "zh-cn":"洛神花（芙蓉茄）在冲绳用于制作鲜艳的红宝石色茶饮，富含柠檬酸和矿物质，口感清新带酸。也用于果酱和传统草药。",
+    ko:"히비스커스(로젤 품종)는 오키나와에서 선명한 루비 빛깔의 차를 만드는 데 사용됩니다. 구연산과 미네랄이 풍부하며 상큼한 신맛이 납니다. 잼과 전통 약재로도 활용됩니다." },
+  { id:7, emoji:"🐙", name:"Octopus (Tako)", nameJa:"タコ", category:"seafood",
+    en:"Fresh octopus caught in the waters around Okinawa. Used in salads, sashimi, or grilled dishes. The clear warm waters produce octopus with particularly tender texture and rich umami flavor.",
+    "zh-tw":"在沖繩周邊海域捕獲的新鮮章魚，用於沙拉、生魚片或燒烤料理。清澈溫暖的海水使章魚肉質特別鮮嫩，鮮味十足。",
+    "zh-cn":"在冲绳周边海域捕获的新鲜章鱼，用于沙拉、生鱼片或烧烤料理。清澈温暖的海水使章鱼肉质特别鲜嫩，鲜味十足。",
+    ko:"오키나와 주변 해역에서 잡은 신선한 문어. 샐러드, 사시미, 구이 요리에 사용됩니다. 맑고 따뜻한 바다에서 자란 문어는 특히 부드러운 식감과 깊은 우마미 풍미를 자랑합니다." },
+  { id:8, emoji:"🍠", name:"Beni Imo (Purple Sweet Potato)", nameJa:"紅芋", category:"vegetable",
+    en:"Okinawa's beloved purple sweet potato. Rich in anthocyanins (purple pigment antioxidants) and natural sweetness. Used in tarts, ice cream, and tempura. The vibrant purple color is stunning.",
+    "zh-tw":"沖繩深受喜愛的紫心地瓜，富含花青素（紫色素抗氧化劑）和天然甜味。用於塔類、冰淇淋和天婦羅。鮮豔的紫色令人驚嘆。",
+    "zh-cn":"冲绳深受喜爱的紫心地瓜，富含花青素（紫色素抗氧化剂）和天然甜味。用于塔类、冰淇淋和天妇罗。鲜艳的紫色令人惊叹。",
+    ko:"오키나와의 보랏빛 고구마. 안토시아닌(보라색 항산화 색소)과 자연스러운 단맛이 풍부합니다. 타르트, 아이스크림, 튀김에 사용됩니다. 선명한 보라색이 인상적입니다." },
+  { id:9, emoji:"🦞", name:"Lobster (Ise Ebi)", nameJa:"伊勢海老", category:"seafood",
+    en:"Japanese spiny lobster (Ise-ebi) is the king of seafood, prized for its rich and sweet flavor. Found in the warm coral reef waters around Okinawa. Often served as sashimi or grilled with butter.",
+    "zh-tw":"日本龍蝦（伊勢海老）是海鮮之王，以其濃郁甜美的口感著稱。棲息於沖繩溫暖的珊瑚礁海域，常以生魚片或奶油燒烤的方式享用。",
+    "zh-cn":"日本龙虾（伊势龙虾）是海鲜之王，以其浓郁甜美的口感著称。栖息于冲绳温暖的珊瑚礁海域，常以生鱼片或黄油烧烤的方式享用。",
+    ko:"일본 닭새우(이세에비)는 해산물의 왕으로, 진하고 달콤한 맛으로 유명합니다. 오키나와 따뜻한 산호초 해역에 서식하며, 사시미 또는 버터 구이로 즐깁니다." },
+];
+
+// ===== QA DATA =====
+const QA_DATA = {
+  en:[
+    { q:"Can I check in early (before 4 PM)?", a:"Early check-in is not available. Staff may be out for preparation and shopping. Please arrive from 16:00." },
+    { q:"Is late check-out possible?", a:"Standard check-out is 10:00. Parking only can be used until 12:00. Late check-out (room included) is available for ¥2,200/person/hour until 12:00." },
+    { q:"Can you accommodate food allergies?", a:"Yes! Please inform us at least 3 days before arrival and we will do our best to accommodate." },
+    { q:"Should I bring pajamas?", a:"Yes, please bring your own pajamas or nightwear. We do not provide yukata or pajamas as amenities." },
+    { q:"Are there many insects?", a:"Yes — we're surrounded by nature! Fish, sea turtles, birds, and insects all live here. We have 45 species of fireflies alone (visible May–November)." },
+    { q:"Is English support available?", a:"English communication is limited. However, we will serve meals and care for your stay with full heart and sincerity." },
+    { q:"Is there a TV in the room?", a:"Superior Twin does not have a TV, but we can loan one on request. Deluxe Twin has a built-in TV." },
+    { q:"What is the size of the Superior Twin?", a:"Approximately 20m² (215 sq ft)." },
+  ],
+  "zh-tw":[
+    { q:"可以提前入住（16時前）嗎？", a:"恕不提供提前入住。工作人員可能外出準備或採購，請於16:00後抵達。" },
+    { q:"可以延遲退房嗎？", a:"標準退房時間為10:00。停車場可免費使用至12:00。含客房的延遲退房費用為每人每小時¥2,200（至12:00）。" },
+    { q:"可以因應食物過敏嗎？", a:"可以！請於入住3天前告知，我們將盡力配合。" },
+    { q:"需要自備睡衣嗎？", a:"是的，請自備睡衣或浴袍，本館不提供浴衣或睡衣備品。" },
+    { q:"蟲子多嗎？", a:"是的，我們身處大自然中！魚、海龜、鳥類和昆蟲都在這裡生活。光是螢火蟲就有45種（5月至11月可見）。" },
+    { q:"可以用英語或中文溝通嗎？", a:"英語溝通能力有限，但我們會用中文為您提供最誠心的服務。" },
+    { q:"客房內有電視嗎？", a:"普通雙床房沒有電視，但可借用。豪華雙床房附有內建電視。" },
+    { q:"普通雙床房的大小是多少？", a:"約20平方公尺。" },
+  ],
+  "zh-cn":[
+    { q:"可以提前入住（16时前）吗？", a:"恕不提供提前入住。工作人员可能外出准备或采购，请于16:00后抵达。" },
+    { q:"可以延迟退房吗？", a:"标准退房时间为10:00。停车场可免费使用至12:00。含客房的延迟退房费用为每人每小时¥2,200（至12:00）。" },
+    { q:"可以因应食物过敏吗？", a:"可以！请于入住3天前告知，我们将尽力配合。" },
+    { q:"需要自备睡衣吗？", a:"是的，请自备睡衣或浴袍，本馆不提供浴衣或睡衣备品。" },
+    { q:"虫子多吗？", a:"是的，我们身处大自然中！鱼、海龟、鸟类和昆虫都在这里生活。光是萤火虫就有45种（5月至11月可见）。" },
+    { q:"可以用中文沟通吗？", a:"英语沟通能力有限，但我们会用中文为您提供最诚心的服务。" },
+    { q:"客房内有电视吗？", a:"普通双床房没有电视，但可借用。豪华双床房附有内置电视。" },
+    { q:"普通双床房的大小是多少？", a:"约20平方米。" },
+  ],
+  ko:[
+    { q:"조기 체크인(16시 이전)이 가능한가요?", a:"조기 체크인은 불가합니다. 스태프가 준비 및 장보기로 외출 중일 수 있으니 16:00 이후에 도착해 주세요." },
+    { q:"레이트 체크아웃이 가능한가요?", a:"표준 체크아웃은 10:00입니다. 주차장만 12:00까지 무료 이용 가능합니다. 객실 포함 레이트 체크아웃은 ¥2,200/인/시간(12:00까지)." },
+    { q:"식품 알레르기 대응이 가능한가요?", a:"가능합니다! 도착 3일 전까지 알려주시면 최대한 대응해 드리겠습니다." },
+    { q:"파자마를 가져와야 하나요?", a:"네, 파자마나 잠옷은 직접 가져와 주세요. 유카타나 파자마는 제공하지 않습니다." },
+    { q:"벌레가 많은가요?", a:"네, 대자연 속에 자리한 숙소입니다! 물고기, 바다거북, 새, 곤충들이 함께 살고 있습니다. 반딧불이만 해도 45종 있습니다(5월~11월 관찰 가능)." },
+    { q:"한국어 소통이 가능한가요?", a:"영어 소통은 제한적이지만, 진심을 담아 최선을 다해 모시겠습니다." },
+    { q:"객실에 TV가 있나요?", a:"슈페리어 트윈에는 TV가 없지만 대여 가능합니다. 디럭스 트윈에는 TV가 내장되어 있습니다." },
+    { q:"슈페리어 트윈 객실 크기는 어느 정도인가요?", a:"약 20㎡입니다." },
+  ]
+};
+
+// ===== NOTICES =====
+const NOTICES = {
+  en:[
+    { type:"warn", icon:"🪼", title:"Jellyfish Warning", text:"Jellyfish may be present in the sea depending on the season. Please wear a rash guard or wetsuit when swimming. Rentals available." },
+    { type:"info", icon:"🧹", title:"No Room Cleaning During Multi-Night Stays", text:"We do not provide daily room cleaning for consecutive stays. Towel and amenity changes are available on request." },
+    { type:"info", icon:"🌪", title:"During Typhoons", text:"Power outages may occur during typhoons. As the kitchen is on the rooftop, meal service may be limited during severe weather." },
+    { type:"warn", icon:"♨️", title:"Open-Air Bath Rules", text:"Swimwear must be worn at all times. The bath is for WASSA WASSA guests only." },
+    { type:"info", icon:"🌿", title:"Nature & Insects", text:"Our inn is surrounded by nature. You may encounter various insects, birds, and wildlife. This is part of the Yanbaru experience!" },
+    { type:"info", icon:"🍽", title:"Rainy Weather Meals", text:"Dinner is normally served on the rooftop terrace. During heavy rain or strong winds, meals are served indoors. Seating will be slightly limited." },
+  ],
+  "zh-tw":[
+    { type:"warn", icon:"🪼", title:"水母警告", text:"海中可能有水母出沒，依季節而定。游泳時請穿防曬衣或潛水衣。可向本館租借。" },
+    { type:"info", icon:"🧹", title:"連住期間不提供客房清潔", text:"連住期間不提供每日客房清潔服務。如需更換毛巾或備品，請向工作人員告知。" },
+    { type:"info", icon:"🌪", title:"颱風期間", text:"颱風時可能停電。由於廚房位於屋頂，強颱風時餐點供應可能受到影響。" },
+    { type:"warn", icon:"♨️", title:"露天溫泉規定", text:"使用時請全程穿著泳衣。露天溫泉僅限WASSA WASSA住宿者使用。" },
+    { type:"info", icon:"🌿", title:"自然環境與昆蟲", text:"本館四周被大自然環繞，可能遇到各種昆蟲、鳥類和野生動物，這正是山原體驗的一部分！" },
+    { type:"info", icon:"🍽", title:"雨天餐食", text:"晚餐通常在屋頂露台提供。遇到大雨或強風時，改在室內用餐，空間可能稍有縮小。" },
+  ],
+  "zh-cn":[
+    { type:"warn", icon:"🪼", title:"水母警告", text:"海中可能有水母出没，依季节而定。游泳时请穿防晒衣或潜水衣。可向本馆租借。" },
+    { type:"info", icon:"🧹", title:"连住期间不提供客房清洁", text:"连住期间不提供每日客房清洁服务。如需更换毛巾或备品，请向工作人员告知。" },
+    { type:"info", icon:"🌪", title:"台风期间", text:"台风时可能停电。由于厨房位于屋顶，强台风时餐点供应可能受到影响。" },
+    { type:"warn", icon:"♨️", title:"露天温泉规定", text:"使用时请全程穿着泳衣。露天温泉仅限WASSA WASSA住宿者使用。" },
+    { type:"info", icon:"🌿", title:"自然环境与昆虫", text:"本馆四周被大自然环绕，可能遇到各种昆虫、鸟类和野生动物，这正是山原体验的一部分！" },
+    { type:"info", icon:"🍽", title:"雨天餐食", text:"晚餐通常在屋顶露台提供。遇到大雨或强风时，改在室内用餐，空间可能稍有缩小。" },
+  ],
+  ko:[
+    { type:"warn", icon:"🪼", title:"해파리 주의", text:"계절에 따라 바다에 해파리가 있을 수 있습니다. 수영 시 래쉬가드나 웻수트를 착용해 주세요. 렌탈 가능합니다." },
+    { type:"info", icon:"🧹", title:"연박 시 객실 청소 없음", text:"연박 기간 중 매일 객실 청소는 제공되지 않습니다. 수건이나 어메니티 교환은 요청 시 대응해 드립니다." },
+    { type:"info", icon:"🌪", title:"태풍 시", text:"태풍 시 정전이 발생할 수 있습니다. 주방이 옥상에 위치해 있어 심한 태풍 시 식사 제공이 어려울 수 있습니다." },
+    { type:"warn", icon:"♨️", title:"노천탕 규정", text:"항상 수영복 착용이 필수입니다. 노천탕은 WASSA WASSA 투숙객 전용입니다." },
+    { type:"info", icon:"🌿", title:"자연환경과 곤충", text:"숙소 주변이 자연으로 둘러싸여 있어 다양한 곤충, 새, 야생동물을 만날 수 있습니다. 얀바루 체험의 일부입니다!" },
+    { type:"info", icon:"🍽", title:"우천 시 식사", text:"저녁 식사는 보통 루프탑 테라스에서 제공됩니다. 폭우나 강풍 시 실내에서 식사가 제공되며, 다소 좁을 수 있습니다." },
+  ]
+};
+
+// ===== STATE =====
+let currentLang = 'en';
+let currentRole = 'guest';
+let adminUnlocked = false;
+let messages = [];
+let currentFilter = 'all';
+
+const LANG_META = {
+  'en': { flag:'🇬🇧', code:'EN' },
+  'zh-tw': { flag:'🇹🇼', code:'繁' },
+  'zh-cn': { flag:'🇨🇳', code:'简' },
+  'ko': { flag:'🇰🇷', code:'한' },
+};
+
+// ===== INIT =====
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('splash').classList.add('hide');
+  document.getElementById('curLangFlag').textContent = LANG_META[lang].flag;
+  document.getElementById('langChipBtn').textContent = LANG_META[lang].code;
+  applyTranslations();
+  renderIngredients();
+  renderQA();
+  renderNotices();
+  updateTalkWelcome();
+  updateTalkPlaceholder();
+}
+
+function showSplash() {
+  document.getElementById('splash').classList.remove('hide');
+}
+
+function applyTranslations() {
+  const t = T[currentLang];
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const key = el.getAttribute('data-key');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+}
+
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  document.querySelector(`[data-tab="${name}"]`).classList.add('active');
+  document.getElementById('mainContent').scrollTop = 0;
+}
+
+// ===== INGREDIENTS =====
+function renderIngredients() {
+  const grid = document.getElementById('ingredientGrid');
+  const filtered = currentFilter === 'all' ? ingredients : ingredients.filter(i => i.category === currentFilter);
+  grid.innerHTML = filtered.map(item => `
+    <div class="ingredient-card" onclick="openIngModal(${item.id})">
+      <span class="ingredient-emoji">${item.emoji}</span>
+      <div class="ingredient-name">${item.name}</div>
+      <div class="ingredient-name-small">${item.nameJa}</div>
+    </div>
+  `).join('');
+}
+
+function filterIng(cat) {
+  currentFilter = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-cat="${cat}"]`).classList.add('active');
+  renderIngredients();
+}
+
+function openIngModal(id) {
+  const item = ingredients.find(i => i.id === id);
+  if (!item) return;
+  document.getElementById('modalEmoji').textContent = item.emoji;
+  document.getElementById('modalName').textContent = item.name;
+  document.getElementById('modalCat').textContent = item.nameJa + ' · ' + item.category;
+  const body = document.getElementById('modalBody');
+  const langs = [
+    { code:'en', label:'English' },
+    { code:'zh-tw', label:'繁體中文' },
+    { code:'zh-cn', label:'简体中文' },
+    { code:'ko', label:'한국어' },
+  ];
+  body.innerHTML = langs.map((l,i) => `
+    <div class="modal-lang-section">
+      <span class="modal-lang-label">${l.label}</span>
+      <div class="modal-lang-text">${item[l.code] || ''}</div>
+    </div>
+    ${i < langs.length-1 ? '<div class="modal-divider"></div>' : ''}
+  `).join('');
+  document.getElementById('ingModal').classList.add('show');
+}
+
+function closeIngModal(e) {
+  if (!e || e.target === document.getElementById('ingModal')) {
+    document.getElementById('ingModal').classList.remove('show');
+  }
+}
+
+// ===== ADMIN =====
+function showPasswordModal() {
+  if (adminUnlocked) { toggleAdmin(); return; }
+  document.getElementById('pwModal').classList.add('show');
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwError').textContent = '';
+  setTimeout(() => document.getElementById('pwInput').focus(), 300);
+}
+
+function checkPassword() {
+  const val = document.getElementById('pwInput').value;
+  if (val === OWNER_PASSWORD) {
+    adminUnlocked = true;
+    closePwModal();
+    toggleAdmin();
+  } else {
+    document.getElementById('pwError').textContent = T[currentLang].pw_wrong || 'Incorrect password';
+    document.getElementById('pwInput').value = '';
+  }
+}
+
+function pwKeyDown(e) { if (e.key === 'Enter') checkPassword(); }
+
+function closePwModal() {
+  document.getElementById('pwModal').classList.remove('show');
+}
+
+function toggleAdmin() {
+  const panel = document.getElementById('adminPanel');
+  panel.classList.add('show');
+  renderEditList();
+}
+
+function closeAdmin() {
+  document.getElementById('adminPanel').classList.remove('show');
+  adminUnlocked = false;
+}
+
+function renderEditList() {
+  const list = document.getElementById('editList');
+  const EMOJIS = ['🥬','🐟','🦐','🦞','🦀','🐙','🐠','🐡','🍋','🌺','🥢','🍠','🌿','🫚','🧅','🥕','🍊','🥑'];
+  const CATS = ['vegetable','seafood','fruit','other'];
+  list.innerHTML = ingredients.map((item,idx) => `
+    <div class="edit-card" id="ecard-${item.id}">
+      <button class="del-btn" onclick="deleteIngredient(${item.id})">✕</button>
+      <div class="edit-card-header">
+        <span style="font-size:28px" id="emoji-display-${item.id}">${item.emoji}</span>
+        <span style="color:var(--warm-gray);font-size:13px;">ID: ${item.id}</span>
+      </div>
+      <div class="emoji-picker-row">
+        ${EMOJIS.map(e=>`<span class="emoji-opt${e===item.emoji?' selected':''}" onclick="setEmoji(${item.id},'${e}',this)">${e}</span>`).join('')}
+      </div>
+      <div class="input-row"><label>Name (EN)</label><input type="text" value="${item.name}" oninput="updateField(${item.id},'name',this.value)"></div>
+      <div class="input-row"><label>日本語名</label><input type="text" value="${item.nameJa}" oninput="updateField(${item.id},'nameJa',this.value)"></div>
+      <div class="input-row"><label>Category</label>
+        <select onchange="updateField(${item.id},'category',this.value)">
+          ${CATS.map(c=>`<option value="${c}"${c===item.category?' selected':''}>${c}</option>`).join('')}
+        </select>
+      </div>
+      <div class="input-row"><label>English Description</label><textarea rows="3" oninput="updateField(${item.id},'en',this.value)">${item.en||''}</textarea></div>
+      <div class="input-row"><label>繁體中文</label><textarea rows="3" oninput="updateField(${item.id},'zh-tw',this.value)">${item['zh-tw']||''}</textarea></div>
+      <div class="input-row"><label>简体中文</label><textarea rows="3" oninput="updateField(${item.id},'zh-cn',this.value)">${item['zh-cn']||''}</textarea></div>
+      <div class="input-row"><label>한국어</label><textarea rows="3" oninput="updateField(${item.id},'ko',this.value)">${item['ko']||''}</textarea></div>
+    </div>
+  `).join('');
+}
+
+function setEmoji(id, emoji, el) {
+  updateField(id, 'emoji', emoji);
+  document.getElementById('emoji-display-'+id).textContent = emoji;
+  el.closest('.emoji-picker-row').querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function updateField(id, field, value) {
+  const item = ingredients.find(i => i.id === id);
+  if (item) item[field] = value;
+}
+
+function addIngredient() {
+  const newId = Math.max(...ingredients.map(i=>i.id), 0) + 1;
+  ingredients.push({ id:newId, emoji:'🌿', name:'New Ingredient', nameJa:'新食材', category:'other', en:'', 'zh-tw':'', 'zh-cn':'', ko:'' });
+  renderEditList();
+  renderIngredients();
+  document.getElementById(`ecard-${newId}`)?.scrollIntoView({ behavior:'smooth' });
+}
+
+function deleteIngredient(id) {
+  if (!confirm('Delete this ingredient?')) return;
+  ingredients = ingredients.filter(i => i.id !== id);
+  renderEditList();
+  renderIngredients();
+}
+
+function saveIngredients() {
+  renderIngredients();
+  alert('✅ Saved successfully!');
+}
+
+// ===== QA =====
+function renderQA() {
+  const qa = QA_DATA[currentLang] || QA_DATA['en'];
+  document.getElementById('qaList').innerHTML = qa.map((item,i) => `
+    <div class="qa-item" id="qa-${i}">
+      <div class="qa-q" onclick="toggleQA(${i})">
+        <span>${item.q}</span>
+        <span class="qa-arrow">▾</span>
+      </div>
+      <div class="qa-a">${item.a}</div>
+    </div>
+  `).join('');
+}
+
+function toggleQA(i) {
+  document.getElementById('qa-'+i).classList.toggle('open');
+}
+
+// ===== NOTICES =====
+function renderNotices() {
+  const notices = NOTICES[currentLang] || NOTICES['en'];
+  document.getElementById('noticeList').innerHTML = notices.map(n => `
+    <div class="${n.type === 'warn' ? 'warn-box' : 'notice-big'}">
+      <h4>${n.icon} ${n.title}</h4>
+      <p>${n.text}</p>
+    </div>
+  `).join('');
+}
+
+// ===== FREE TALK =====
+function setRole(role) {
+  currentRole = role;
+  document.getElementById('btnGuest').classList.toggle('active', role==='guest');
+  document.getElementById('btnStaff').classList.toggle('active', role==='staff');
+  updateTalkPlaceholder();
+}
+
+function updateTalkPlaceholder() {
+  document.getElementById('talkInput').placeholder = T[currentLang]?.talk_placeholder || 'Type a message...';
+}
+
+function updateTalkWelcome() {
+  const el = document.getElementById('welcomeMsgBubble');
+  if (el) el.textContent = T[currentLang]?.talk_welcome || '';
+  const timeEl = document.getElementById('welcomeMsgTime');
+  if (timeEl) timeEl.textContent = getTime();
+}
+
+function getTime() {
+  return new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+}
+
+function sendMessage() {
+  const input = document.getElementById('talkInput');
+  const text = input.value.trim();
+  if (!text) return;
+  addMessage(text, currentRole);
+  input.value = '';
+  autoResize(input);
+}
+
+function addMessage(text, role) {
+  const container = document.getElementById('talkMessages');
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.innerHTML = `
+    <div class="msg-avatar">${role === 'guest' ? '👤' : '👩‍💼'}</div>
+    <div>
+      <div class="msg-bubble">${escHtml(text)}</div>
+      <div class="msg-time">${getTime()}</div>
+    </div>
+  `;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function escHtml(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+
+function talkKeyDown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+// ===== SCROLL TOP =====
+document.getElementById('mainContent').addEventListener('scroll', function() {
+  const btn = document.getElementById('scrollTopBtn');
+  btn.classList.toggle('show', this.scrollTop > 200);
+});
+
+function scrollToTop() {
+  document.getElementById('mainContent').scrollTo({ top:0, behavior:'smooth' });
+}
+
+// ===== BOOT =====
+window.addEventListener('load', () => {
+  document.getElementById('welcomeMsgTime').textContent = getTime();
+});
+</script>
+</body>
+</html>
